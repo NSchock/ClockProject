@@ -1,0 +1,106 @@
+package com.shockwave.clockproj;
+
+import android.app.Service;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.IBinder;
+import android.util.Log;
+
+//Might be using thread wrong
+public class StopwatchService extends Service {
+    final static String START_ACTION = "START_ACTION";
+
+    //Stopwatch Vars
+    long customMillis, sStart, elapsedTime;
+    boolean valueEntered = false;
+
+    private final int REFRESH_RATE = 100;
+    private Handler sHandler = new Handler();
+    private Runnable startStopwatch = new Runnable() {
+        public void run() {
+            final long start = sStart;
+            elapsedTime = System.currentTimeMillis() - start;
+            updateStopwatch(elapsedTime);
+            sHandler.postDelayed(this, REFRESH_RATE);
+        }
+    };
+
+    public void updateStopwatch(long time) {
+        int seconds = (int) time / 1000;
+        int minutes = seconds / 60;
+        int hours = minutes / 60;
+        long millis = time % 1000;
+        seconds = seconds % 60;
+        minutes = minutes % 60;
+        hours = hours % 24;
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(StopwatchService.START_ACTION);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra("stopwatchMain", String.format("%d : %02d : %02d", hours, minutes,
+                seconds));
+        broadcastIntent.putExtra("stopwatchMillis", String.format(". %03d", millis));
+        sendBroadcast(broadcastIntent);
+    }
+
+    SharedPreferences preferences;
+    boolean startedBefore = false;
+
+    @Override
+    public void onCreate() {
+        preferences = getSharedPreferences("StopwatchServicePrefs", 0);
+        preferences.getBoolean("stopwatchsaves", true);
+        startedBefore = preferences.getBoolean("startedBefore", false);
+        if (startedBefore) {
+            sStart = preferences.getLong("sStart", 0);
+            elapsedTime = preferences.getLong("elapsedTime", 0);
+        } else {
+            sStart = 0;
+        }
+        super.onCreate();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        valueEntered = intent.getBooleanExtra("valueEntered", false);
+        customMillis = intent.getLongExtra("customMillis", 0);
+        Log.d("Values", String.valueOf(valueEntered) + "," + String.valueOf("customMillis"));
+        if (!valueEntered) {
+            if (sStart == 0L) {
+                sStart = System.currentTimeMillis();
+            } else {
+                sStart = System.currentTimeMillis() - elapsedTime;
+            }
+        } else {
+            sStart = System.currentTimeMillis() - customMillis;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sHandler.removeCallbacks(startStopwatch);
+                sHandler.postDelayed(startStopwatch, REFRESH_RATE);
+            }
+        }).start();
+        valueEntered = false;
+        intent.removeExtra("valueEntered");
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        startedBefore = true;
+        sHandler.removeCallbacks(startStopwatch);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong("sStart", sStart);
+        editor.putLong("elapsedTime", elapsedTime);
+        editor.putBoolean("startedBefore", startedBefore);
+        editor.commit();
+        super.onDestroy();
+    }
+}
