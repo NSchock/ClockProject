@@ -73,8 +73,11 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
         super.onCreate(savedInstanceState);
     }
 
-    private void setupListView() {
+    public boolean isFree() {
+        return getActivity().getPackageName().toLowerCase().contains("free");
+    }
 
+    private void setupListView() {
         lvStopwatch.setAdapter(stopwatchAdapter);
         registerForContextMenu(lvStopwatch);
     }
@@ -105,51 +108,58 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
         }
 
         final SwipeDetector swipeDetector = new SwipeDetector();
-        lvStopwatch.setOnTouchListener(swipeDetector);
-        lvStopwatch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if (swipeDetector.swipeDetected()) {
-                    for (int pos = position; pos < stopwatchTimes.length - 1; pos++) {
-                        stopwatchTimes[pos] = stopwatchTimes[pos + 1];
-                        stopwatchTimes[pos + 1] = " ";
-                    }
-                    if (position == stopwatchTimes.length - 1) {
-                        stopwatchTimes[position] = " ";
-                    }
-                    stopwatchAdapter.notifyDataSetChanged();
-                } else {
-                    if (!stopwatchTimes[position].equals( " ")) {
-                        valueEntered = true;
-                        char[] stopwatchMain = stopwatchTimes[position].toString().toCharArray();
-                        int hrs = Integer.parseInt(String.valueOf(stopwatchMain[0]));
-                        int mins = Integer.parseInt(String.valueOf(stopwatchMain[4]) + String.valueOf(stopwatchMain[5]));
-                        int secs = Integer.parseInt(String.valueOf(stopwatchMain[9]) + String.valueOf(stopwatchMain[10]));
-                        char[] stopwatchMilli = stopwatchTimes[position].toString().toCharArray();
-                        int milli = Integer.parseInt(String.valueOf(stopwatchMilli[13]) + String.valueOf(stopwatchMilli[14]) + String.valueOf(stopwatchMilli[15])) + 1000 * (secs + 60 * (mins + hrs * 60));
-                        customMillis = milli;
-                        stopwatchIntent.putExtra("customMillis", customMillis);
-                        stopwatchIntent.putExtra("valueEntered", valueEntered);
-                        updateStopwatch(milli);
+        if (!isFree()) {
+            lvStopwatch.setOnTouchListener(swipeDetector);
+            lvStopwatch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    if (swipeDetector.swipeDetected()) {
+                        for (int pos = position; pos < stopwatchTimes.length - 1; pos++) {
+                            stopwatchTimes[pos] = stopwatchTimes[pos + 1];
+                            stopwatchTimes[pos + 1] = " ";
+                        }
+                        if (position == stopwatchTimes.length - 1) {
+                            stopwatchTimes[position] = " ";
+                        }
+                        stopwatchAdapter.notifyDataSetChanged();
+                    } else {
+                        if (!stopwatchTimes[position].equals(" ")) {
+                            valueEntered = true;
+                            char[] stopwatchMain = stopwatchTimes[position].toString().toCharArray();
+                            int hrs = Integer.parseInt(String.valueOf(stopwatchMain[0]));
+                            int mins = Integer.parseInt(String.valueOf(stopwatchMain[4]) + String.valueOf(stopwatchMain[5]));
+                            int secs = Integer.parseInt(String.valueOf(stopwatchMain[9]) + String.valueOf(stopwatchMain[10]));
+                            char[] stopwatchMilli = stopwatchTimes[position].toString().toCharArray();
+                            int milli = Integer.parseInt(String.valueOf(stopwatchMilli[13]) + String.valueOf(stopwatchMilli[14]) + String.valueOf(stopwatchMilli[15])) + 1000 * (secs + 60 * (mins + hrs * 60));
+                            customMillis = milli;
+                            stopwatchIntent.putExtra("customMillis", customMillis);
+                            stopwatchIntent.putExtra("valueEntered", valueEntered);
+                            updateStopwatch(milli);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
         lvStopwatch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if (swipeDetector.swipeDetected()) {
-                    for (int pos = position; pos < stopwatchTimes.length - 1; pos++) {
-                        stopwatchTimes[pos] = stopwatchTimes[pos + 1];
-                        stopwatchTimes[pos + 1] = " ";
-                    }
-                    if (position == stopwatchTimes.length - 1) {
-                        stopwatchTimes[position] = " ";
-                    }
-                    stopwatchAdapter.notifyDataSetChanged();
-                } else {
+                if (isFree()) {
                     lvStopwatch.showContextMenu();
+                } else {
+                    if (swipeDetector.swipeDetected()) {
+                        for (int pos = position; pos < stopwatchTimes.length - 1; pos++) {
+                            stopwatchTimes[pos] = stopwatchTimes[pos + 1];
+                            stopwatchTimes[pos + 1] = " ";
+                        }
+                        if (position == stopwatchTimes.length - 1) {
+                            stopwatchTimes[position] = " ";
+                        }
+                        stopwatchAdapter.notifyDataSetChanged();
+                    } else {
+                        lvStopwatch.showContextMenu();
+                    }
                 }
+
                 return false;
             }
         });
@@ -165,20 +175,20 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.delete_time:
-                int pos = info.position;
-                for (pos = info.position; pos < stopwatchTimes.length - 1; pos++) {
-                    stopwatchTimes[pos] = stopwatchTimes[pos + 1];
-                    stopwatchTimes[pos + 1] = " ";
-                }
-                if (pos == stopwatchTimes.length - 1) {
-                    stopwatchTimes[pos] = " ";
-                }
-                stopwatchAdapter.notifyDataSetChanged();
-                return super.onContextItemSelected(item);
-            case R.id.use_time:
+        if (id == R.id.delete_time) {
+            int pos = info.position;
+            for (pos = info.position; pos < stopwatchTimes.length - 1; pos++) {
+                stopwatchTimes[pos] = stopwatchTimes[pos + 1];
+                stopwatchTimes[pos + 1] = " ";
+            }
+            if (pos == stopwatchTimes.length - 1) {
+                stopwatchTimes[pos] = " ";
+            }
+            stopwatchAdapter.notifyDataSetChanged();
+        } else if (id == R.id.use_time) {
+            if (!isFree()) {
                 if (stopwatchTimes[info.position] != " ") {
                     valueEntered = true;
                     char[] stopwatchMain = stopwatchTimes[info.position].toString().toCharArray();
@@ -192,10 +202,29 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
                     stopwatchIntent.putExtra("valueEntered", valueEntered);
                     updateStopwatch(milli);
                 }
-                return super.onContextItemSelected(item);
-            default:
-                return super.onContextItemSelected(item);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Feature Unavailable");
+                builder.setMessage("This feature requires the pro version of Clock Project. Would you like to buy it now?");
+                builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //TODO add link to market.
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+
+                alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                alertDialog.show();
+            }
         }
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -207,102 +236,102 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_delete_times).setVisible(true);
-        menu.findItem(R.id.menu_set_saved_times_limit).setVisible(true);
+        if (!isFree()) {
+            menu.findItem(R.id.menu_set_saved_times_limit).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_set_saved_times_limit).setVisible(false);
+            menu.findItem(R.id.menu_buy_pro).setVisible(true);
+        }
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_delete_times:
-                for (int i = 0; i < stopwatchTimes.length; i++) {
-                    stopwatchTimes[i] = " ";
+        int id = item.getItemId();
+        if (id == R.id.menu_delete_times) {
+            for (int i = 0; i < stopwatchTimes.length; i++) {
+                stopwatchTimes[i] = " ";
+            }
+            stopwatchAdapter.notifyDataSetChanged();
+        } else if (id == R.id.menu_set_saved_times_limit) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    return;
                 }
-                stopwatchAdapter.notifyDataSetChanged();
-                return super.onOptionsItemSelected(item);
-            case R.id.menu_set_saved_times_limit:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        return;
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        return;
-                    }
-                });
-                View v = getActivity().getLayoutInflater().inflate(R.layout.numberpicker_dialog, null);
-                builder.setView(v);
-                AlertDialog alertDialog = builder.create();
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    return;
+                }
+            });
+            View v = getActivity().getLayoutInflater().inflate(R.layout.numberpicker_dialog, null);
+            builder.setView(v);
+            AlertDialog alertDialog = builder.create();
 
-                npTotalTimes = (NumberPicker) v.findViewById(R.id.npSavedTimes);
-                npTotalTimes.setMinValue(3);
-                npTotalTimes.setMaxValue(25);
-                npTotalTimes.setValue(TOTAL_TIMES);
-                npTotalTimes.setOnValueChangedListener(this);
-                alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                alertDialog.show();
-                return super.onOptionsItemSelected(item);
-            default:
-                return super.onOptionsItemSelected(item);
+            npTotalTimes = (NumberPicker) v.findViewById(R.id.npSavedTimes);
+            npTotalTimes.setMinValue(3);
+            npTotalTimes.setMaxValue(25);
+            npTotalTimes.setValue(TOTAL_TIMES);
+            npTotalTimes.setOnValueChangedListener(this);
+            alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            alertDialog.show();
+        } else if (id == R.id.menu_buy_pro) {
+            //TODO open dialog box with info; link to market
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.bStart:
-                showStopButton();
-                stopwatchRunning = true;
-                stopwatchLooped++;
-                if (stopwatchLooped >= TOTAL_TIMES) {
-                    stopwatchLooped = 1;
-                    j = 0;
+        int id = view.getId();
+        if (id == R.id.bStart) {
+            showStopButton();
+            stopwatchRunning = true;
+            stopwatchLooped++;
+            if (stopwatchLooped >= TOTAL_TIMES) {
+                stopwatchLooped = 1;
+                j = 0;
+            }
+            getActivity().getApplicationContext().startService(stopwatchIntent);
+            stopwatchIntent.removeExtra("valueEntered");
+        } else if (id == R.id.bStop) {
+            hideStopButton();
+            stopwatchRunning = false;
+            while (j < stopwatchLooped) {
+                for (int i = stopwatchTimes.length - 1; i > 0; i--) {
+                    stopwatchTimes[i] = stopwatchTimes[i - 1];
                 }
-                getActivity().getApplicationContext().startService(stopwatchIntent);
+                stopwatchTimes[0] = txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString();
+                j++;
+            }
+            getActivity().getApplicationContext().stopService(stopwatchIntent);
+        } else if (id == R.id.bReset) {
+            if (valueEntered) {
                 stopwatchIntent.removeExtra("valueEntered");
-                break;
-            case R.id.bStop:
-                hideStopButton();
-                stopwatchRunning = false;
-                while (j < stopwatchLooped) {
-                    for (int i = stopwatchTimes.length - 1; i > 0; i--) {
-                        stopwatchTimes[i] = stopwatchTimes[i - 1];
-                    }
-                    stopwatchTimes[0] = txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString();
-                    j++;
+            }
+            txtStopwatch.setText("0 : 00 : 00");
+            txtStopwatchMillis.setText(". 000");
+            StopwatchService service = new StopwatchService();
+            service.preferences = getActivity().getSharedPreferences("StopwatchServicePrefs", 0);
+            SharedPreferences.Editor editor = service.preferences.edit();
+            editor.clear();
+            editor.commit();
+        } else if (id == R.id.bLoop) {
+            while (j < stopwatchLooped) {
+                for (int i = stopwatchTimes.length - 1; i > 0; i--) {
+                    stopwatchTimes[i] = stopwatchTimes[i - 1];
                 }
-                getActivity().getApplicationContext().stopService(stopwatchIntent);
-                break;
-            case R.id.bReset:
-                if (valueEntered) {
-                    stopwatchIntent.removeExtra("valueEntered");
-                }
-                txtStopwatch.setText("0 : 00 : 00");
-                txtStopwatchMillis.setText(". 000");
-                StopwatchService service = new StopwatchService();
-                service.preferences = getActivity().getSharedPreferences("StopwatchServicePrefs", 0);
-                SharedPreferences.Editor editor = service.preferences.edit();
-                editor.clear();
-                editor.commit();
-                break;
-            case R.id.bLoop:
-                while (j < stopwatchLooped) {
-                    for (int i = stopwatchTimes.length - 1; i > 0; i--) {
-                        stopwatchTimes[i] = stopwatchTimes[i - 1];
-                    }
-                    stopwatchTimes[0] = txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString();
-                    j++;
-                }
-                stopwatchLooped++;
-                if (stopwatchLooped >= TOTAL_TIMES) {
-                    stopwatchLooped = 1;
-                    j = 0;
-                }
-                break;
+                stopwatchTimes[0] = txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString();
+                j++;
+            }
+            stopwatchLooped++;
+            if (stopwatchLooped >= TOTAL_TIMES) {
+                stopwatchLooped = 1;
+                j = 0;
+            }
         }
         stopwatchAdapter.notifyDataSetChanged();
         lvStopwatch.invalidateViews();
@@ -371,7 +400,6 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
         public void onReceive(Context context, Intent intent) {
             String stopwatchMain = intent.getStringExtra("stopwatchMain");
             txtStopwatch.setText(stopwatchMain);
-            Log.d("xxxxx", "get data" + stopwatchMain);
             String stopwatchMillis = intent.getStringExtra("stopwatchMillis");
             txtStopwatchMillis.setText(stopwatchMillis);
         }

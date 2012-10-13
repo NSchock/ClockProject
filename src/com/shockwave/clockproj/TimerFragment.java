@@ -79,37 +79,34 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Num
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.bStartTimer:
-                showStopButtonTimer();
-                timerIntent.putExtra("cdHour", npHour.getValue());
-                timerIntent.putExtra("cdMin", npMin.getValue());
-                timerIntent.putExtra("cdSec", npSec.getValue());
-                getActivity().getApplicationContext().startService(timerIntent);
-                break;
-            case R.id.bStopTimer:
-                hideStopButtonTimer();
-                getActivity().getApplicationContext().stopService(timerIntent);
+        int id = view.getId();
+        if (id == R.id.bStartTimer) {
+            showStopButtonTimer();
+            timerIntent.putExtra("cdHour", npHour.getValue());
+            timerIntent.putExtra("cdMin", npMin.getValue());
+            timerIntent.putExtra("cdSec", npSec.getValue());
+            getActivity().getApplicationContext().startService(timerIntent);
+        } else if (id == R.id.bStopTimer) {
+            hideStopButtonTimer();
+            getActivity().getApplicationContext().stopService(timerIntent);
+            timerRunning = false;
+            timerIntent.removeExtra("timeChanged");
+        } else if (id == R.id.bResetTimer) {
+            if (timerRunning) {
                 timerRunning = false;
-                timerIntent.removeExtra("timeChanged");
-                break;
-            case R.id.bResetTimer:
-                if (timerRunning) {
-                    timerRunning = false;
-                }
-                npSec.setValue(0);
-                npMin.setValue(0);
-                npHour.setValue(0);
-                TimerService service = new TimerService();
-                service.timerPrefs = getActivity().getSharedPreferences("TimerServicePrefs", 0);
-                SharedPreferences.Editor editor = service.timerPrefs.edit();
-                editor.clear();
-                editor.commit();
-                timerIntent.removeExtra("cdHour");
-                timerIntent.removeExtra("cdMin");
-                timerIntent.removeExtra("cdSec");
-                updateTimerTextView();
-                break;
+            }
+            npSec.setValue(0);
+            npMin.setValue(0);
+            npHour.setValue(0);
+            TimerService service = new TimerService();
+            service.timerPrefs = getActivity().getSharedPreferences("TimerServicePrefs", 0);
+            SharedPreferences.Editor editor = service.timerPrefs.edit();
+            editor.clear();
+            editor.commit();
+            timerIntent.removeExtra("cdHour");
+            timerIntent.removeExtra("cdMin");
+            timerIntent.removeExtra("cdSec");
+            updateTimerTextView();
         }
     }
 
@@ -161,7 +158,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Num
         public void onReceive(Context context, Intent intent) {
             String timerMain = intent.getStringExtra("timerMain");
             txtTimer.setText(timerMain);
-            Log.d("xxxxx", "get data" + timerMain);
             String timerMillis = intent.getStringExtra("timerMillis");
             txtTimerMillis.setText(timerMillis);
             timerRunning = intent.getBooleanExtra("timerRunning", true);

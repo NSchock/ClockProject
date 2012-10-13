@@ -1,5 +1,7 @@
 package com.shockwave.clockproj;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -68,6 +70,18 @@ public class StopwatchService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Intent notificationIntent = new Intent(getApplicationContext(), ClockMain.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+        builder.setContentTitle("Clock Project Stopwatch");
+        builder.setContentText("Stopwatch is Running.");
+        builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+        Notification notification = builder.build();
+        startForeground(51, notification);
+
         valueEntered = intent.getBooleanExtra("valueEntered", false);
         customMillis = intent.getLongExtra("customMillis", 0);
         Log.d("Values", String.valueOf(valueEntered) + "," + String.valueOf("customMillis"));
@@ -80,13 +94,8 @@ public class StopwatchService extends Service {
         } else {
             sStart = System.currentTimeMillis() - customMillis;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sHandler.removeCallbacks(startStopwatch);
-                sHandler.postDelayed(startStopwatch, REFRESH_RATE);
-            }
-        }).start();
+        sHandler.removeCallbacks(startStopwatch);
+        sHandler.postDelayed(startStopwatch, REFRESH_RATE);
         valueEntered = false;
         intent.removeExtra("valueEntered");
         return START_STICKY;
@@ -101,6 +110,8 @@ public class StopwatchService extends Service {
         editor.putLong("elapsedTime", elapsedTime);
         editor.putBoolean("startedBefore", startedBefore);
         editor.commit();
+
+        stopForeground(true);
         super.onDestroy();
     }
 }

@@ -36,6 +36,18 @@ public class TimerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Intent notificationIntent = new Intent(getApplicationContext(), ClockMain.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+        builder.setContentTitle("Clock Project Timer");
+        builder.setContentText("Timer is Running.");
+        builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+        Notification timerRunningNote = builder.build();
+        startForeground(71, timerRunningNote);
+
         timeChanged = intent.getBooleanExtra("timeChanged", false);
         if (timeChanged) {
             cdHour = intent.getIntExtra("cdHour", 0);
@@ -87,6 +99,8 @@ public class TimerService extends Service {
                 editor.clear();
                 editor.commit();
 
+                stopForeground(true);
+
                 Intent notificationIntent = new Intent(getApplicationContext(), ClockMain.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
                 Notification.Builder builder = new Notification.Builder(getApplicationContext());
@@ -116,6 +130,8 @@ public class TimerService extends Service {
         editor.putInt("cdMillis", cdMillis);
         editor.putBoolean("stopped", true);
         editor.commit();
+
+        stopForeground(true);
         super.onDestroy();
     }
 

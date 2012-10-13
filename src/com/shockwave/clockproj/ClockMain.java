@@ -6,8 +6,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
-//Doesn't save stopwatch value to listview after pressing back
-//AsyncTask operation may be unstable.
 public class ClockMain extends Activity {
 
     @Override

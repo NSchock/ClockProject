@@ -11,75 +11,76 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_action_delete=0x7f020000;
-        public static final int ic_action_overflow=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
+        public static int ic_action_delete=0x7f020000;
+        public static int ic_action_overflow=0x7f020001;
+        public static int ic_launcher=0x7f020002;
     }
     public static final class id {
-        public static final int STOPWATCH_SERVICE=0x7f07002c;
-        public static final int SW_SERVICE=0x7f07002a;
-        public static final int TIMER_SERVICE=0x7f07002b;
-        public static final int bEnterTimes=0x7f070025;
-        public static final int bLoop=0x7f070009;
-        public static final int bReset=0x7f070008;
-        public static final int bResetTimer=0x7f070016;
-        public static final int bResetTimerWidget=0x7f070020;
-        public static final int bResetWidget=0x7f070010;
-        public static final int bStart=0x7f070007;
-        public static final int bStartTimer=0x7f070015;
-        public static final int bStartTimerWidget=0x7f07001f;
-        public static final int bStartWidget=0x7f07000f;
-        public static final int bStop=0x7f07000a;
-        public static final int bStopTimer=0x7f070017;
-        public static final int bStopTimerWidget=0x7f070021;
-        public static final int bStopWidget=0x7f070011;
-        public static final int delete_time=0x7f070027;
-        public static final int fragment_container=0x7f070000;
-        public static final int ibSetTimeWidget=0x7f07001e;
-        public static final int list_stopwatch=0x7f07000b;
-        public static final int menu_delete_times=0x7f070028;
-        public static final int menu_set_saved_times_limit=0x7f070029;
-        public static final int npHours=0x7f070018;
-        public static final int npHoursWidget=0x7f070022;
-        public static final int npMinutes=0x7f070019;
-        public static final int npMinutesWidget=0x7f070023;
-        public static final int npSavedTimes=0x7f070003;
-        public static final int npSeconds=0x7f07001a;
-        public static final int npSecondsWidget=0x7f070024;
-        public static final int stopwatch_frag=0x7f070001;
-        public static final int stopwatch_relative=0x7f070004;
-        public static final int stopwatch_relative_widget=0x7f07000c;
-        public static final int timer_frag=0x7f070002;
-        public static final int timer_relative=0x7f070012;
-        public static final int timer_relative_widget=0x7f07001b;
-        public static final int tvStopwatch=0x7f070005;
-        public static final int tvStopwatchMillis=0x7f070006;
-        public static final int tvStopwatchMillisWidget=0x7f07000e;
-        public static final int tvStopwatchWidget=0x7f07000d;
-        public static final int tvTimer=0x7f070013;
-        public static final int tvTimerMillis=0x7f070014;
-        public static final int tvTimerMillisWidget=0x7f07001d;
-        public static final int tvTimerWidget=0x7f07001c;
-        public static final int use_time=0x7f070026;
+        public static int STOPWATCH_SERVICE=0x7f07002d;
+        public static int SW_SERVICE=0x7f07002b;
+        public static int TIMER_SERVICE=0x7f07002c;
+        public static int bEnterTimes=0x7f070025;
+        public static int bLoop=0x7f070009;
+        public static int bReset=0x7f070008;
+        public static int bResetTimer=0x7f070016;
+        public static int bResetTimerWidget=0x7f070020;
+        public static int bResetWidget=0x7f070010;
+        public static int bStart=0x7f070007;
+        public static int bStartTimer=0x7f070015;
+        public static int bStartTimerWidget=0x7f07001f;
+        public static int bStartWidget=0x7f07000f;
+        public static int bStop=0x7f07000a;
+        public static int bStopTimer=0x7f070017;
+        public static int bStopTimerWidget=0x7f070021;
+        public static int bStopWidget=0x7f070011;
+        public static int delete_time=0x7f070027;
+        public static int fragment_container=0x7f070000;
+        public static int ibSetTimeWidget=0x7f07001e;
+        public static int list_stopwatch=0x7f07000b;
+        public static int menu_buy_pro=0x7f07002a;
+        public static int menu_delete_times=0x7f070028;
+        public static int menu_set_saved_times_limit=0x7f070029;
+        public static int npHours=0x7f070018;
+        public static int npHoursWidget=0x7f070022;
+        public static int npMinutes=0x7f070019;
+        public static int npMinutesWidget=0x7f070023;
+        public static int npSavedTimes=0x7f070003;
+        public static int npSeconds=0x7f07001a;
+        public static int npSecondsWidget=0x7f070024;
+        public static int stopwatch_frag=0x7f070001;
+        public static int stopwatch_relative=0x7f070004;
+        public static int stopwatch_relative_widget=0x7f07000c;
+        public static int timer_frag=0x7f070002;
+        public static int timer_relative=0x7f070012;
+        public static int timer_relative_widget=0x7f07001b;
+        public static int tvStopwatch=0x7f070005;
+        public static int tvStopwatchMillis=0x7f070006;
+        public static int tvStopwatchMillisWidget=0x7f07000e;
+        public static int tvStopwatchWidget=0x7f07000d;
+        public static int tvTimer=0x7f070013;
+        public static int tvTimerMillis=0x7f070014;
+        public static int tvTimerMillisWidget=0x7f07001d;
+        public static int tvTimerWidget=0x7f07001c;
+        public static int use_time=0x7f070026;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
-        public static final int numberpicker_dialog=0x7f030001;
-        public static final int stopwatch_fragment=0x7f030002;
-        public static final int stopwatch_widget_layout=0x7f030003;
-        public static final int timer_fragment=0x7f030004;
-        public static final int timer_widget_layout=0x7f030005;
-        public static final int timer_widget_numberpicker_dialog=0x7f030006;
+        public static int main=0x7f030000;
+        public static int numberpicker_dialog=0x7f030001;
+        public static int stopwatch_fragment=0x7f030002;
+        public static int stopwatch_widget_layout=0x7f030003;
+        public static int timer_fragment=0x7f030004;
+        public static int timer_widget_layout=0x7f030005;
+        public static int timer_widget_numberpicker_dialog=0x7f030006;
     }
     public static final class menu {
-        public static final int context_menu_stopwatch=0x7f060000;
-        public static final int menu_stopwatch=0x7f060001;
+        public static int context_menu_stopwatch=0x7f060000;
+        public static int menu_stopwatch=0x7f060001;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
+        public static int app_name=0x7f050000;
     }
     public static final class xml {
-        public static final int stopwatch_widget_info=0x7f040000;
-        public static final int timer_widget_info=0x7f040001;
+        public static int stopwatch_widget_info=0x7f040000;
+        public static int timer_widget_info=0x7f040001;
     }
 }
