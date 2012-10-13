@@ -1,12 +1,11 @@
 package com.shockwave.clockproj;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.*;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Num
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setRetainInstance(true);
+        setHasOptionsMenu(true);
         IntentFilter filter = new IntentFilter(TimerService.START_ACTION);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new TimerReceiver();
@@ -34,6 +34,51 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Num
         prefs = getActivity().getSharedPreferences("TimerFragmentPrefs", 0);
         prefs.getBoolean("timerViewSaves", true);
         super.onCreate(savedInstanceState);
+    }
+
+    public boolean isFree() {
+        return getActivity().getPackageName().toLowerCase().contains("free");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_stopwatch, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_delete_times).setVisible(false);
+        menu.findItem(R.id.menu_set_saved_times_limit).setVisible(false);
+        if (isFree()) {
+            menu.findItem(R.id.menu_buy_pro).setVisible(true);
+        }
+        menu.findItem(R.id.menu_buy_pro).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Buy Pro Version");
+                builder.setMessage("If you buy the pro version of Clock Project, this button will become a button allowing you to change the limit of saved times on the stopwatch. Buy now?");
+                builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //TODO add link to market.
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+
+                alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                alertDialog.show();
+                return true;
+            }
+        });
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

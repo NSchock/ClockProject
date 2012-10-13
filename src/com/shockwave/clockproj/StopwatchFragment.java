@@ -279,7 +279,25 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
             alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             alertDialog.show();
         } else if (id == R.id.menu_buy_pro) {
-            //TODO open dialog box with info; link to market
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Buy Pro Version");
+            builder.setMessage("If you buy the pro version of Clock Project, this button will become a button allowing you to change the limit of saved times on the stopwatch. Buy now?");
+            builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //TODO add link to market.
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    return;
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            alertDialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
