@@ -3,8 +3,8 @@ package com.shockwave.clockproj;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -62,7 +62,10 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Num
                 builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //TODO add link to market.
+                        String appName = "market://details?id=com.shockwave.clockproj.paid";
+                        Intent goToMarket;
+                        goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(appName));
+                        startActivity(goToMarket);
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

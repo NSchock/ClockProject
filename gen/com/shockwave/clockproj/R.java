@@ -13,11 +13,14 @@ public final class R {
     public static final class drawable {
         public static int ic_action_delete=0x7f020000;
         public static int ic_action_overflow=0x7f020001;
-        public static int ic_launcher=0x7f020002;
+        public static int ic_clockproj=0x7f020002;
+        public static int ic_launcher=0x7f020003;
+        public static int ic_stat_ic_timer_running=0x7f020004;
+        public static int ic_stat_stopwatch_running=0x7f020005;
+        public static int ic_stat_timer_up=0x7f020006;
     }
     public static final class id {
-        public static int STOPWATCH_SERVICE=0x7f07002d;
-        public static int SW_SERVICE=0x7f07002b;
+        public static int STOPWATCH_SERVICE=0x7f07002b;
         public static int TIMER_SERVICE=0x7f07002c;
         public static int bEnterTimes=0x7f070025;
         public static int bLoop=0x7f070009;

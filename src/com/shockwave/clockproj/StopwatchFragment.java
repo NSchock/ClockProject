@@ -3,6 +3,7 @@ package com.shockwave.clockproj;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -103,16 +104,16 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
         lvStopwatch = (ListView) view.findViewById(R.id.list_stopwatch);
         setupListView();
 
-        if (stopwatchRunning) {
+        if (stopwatchRunning)
             showStopButton();
-        }
 
         final SwipeDetector swipeDetector = new SwipeDetector();
-        if (!isFree()) {
-            lvStopwatch.setOnTouchListener(swipeDetector);
-            lvStopwatch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+        lvStopwatch.setOnTouchListener(swipeDetector);
+        lvStopwatch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if (!isFree()) {
                     if (swipeDetector.swipeDetected()) {
                         for (int pos = position; pos < stopwatchTimes.length - 1; pos++) {
                             stopwatchTimes[pos] = stopwatchTimes[pos + 1];
@@ -125,11 +126,11 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
                     } else {
                         if (!stopwatchTimes[position].equals(" ")) {
                             valueEntered = true;
-                            char[] stopwatchMain = stopwatchTimes[position].toString().toCharArray();
+                            char[] stopwatchMain = stopwatchTimes[position].toCharArray();
                             int hrs = Integer.parseInt(String.valueOf(stopwatchMain[0]));
                             int mins = Integer.parseInt(String.valueOf(stopwatchMain[4]) + String.valueOf(stopwatchMain[5]));
                             int secs = Integer.parseInt(String.valueOf(stopwatchMain[9]) + String.valueOf(stopwatchMain[10]));
-                            char[] stopwatchMilli = stopwatchTimes[position].toString().toCharArray();
+                            char[] stopwatchMilli = stopwatchTimes[position].toCharArray();
                             int milli = Integer.parseInt(String.valueOf(stopwatchMilli[13]) + String.valueOf(stopwatchMilli[14]) + String.valueOf(stopwatchMilli[15])) + 1000 * (secs + 60 * (mins + hrs * 60));
                             customMillis = milli;
                             stopwatchIntent.putExtra("customMillis", customMillis);
@@ -137,9 +138,12 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
                             updateStopwatch(milli);
                         }
                     }
+                } else {
+
                 }
-            });
-        }
+            }
+        });
+
         lvStopwatch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -189,13 +193,13 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
             stopwatchAdapter.notifyDataSetChanged();
         } else if (id == R.id.use_time) {
             if (!isFree()) {
-                if (stopwatchTimes[info.position] != " ") {
+                if (!stopwatchTimes[info.position].equals(" ")) {
                     valueEntered = true;
-                    char[] stopwatchMain = stopwatchTimes[info.position].toString().toCharArray();
+                    char[] stopwatchMain = stopwatchTimes[info.position].toCharArray();
                     int hrs = Integer.parseInt(String.valueOf(stopwatchMain[0]));
                     int mins = Integer.parseInt(String.valueOf(stopwatchMain[4]) + String.valueOf(stopwatchMain[5]));
                     int secs = Integer.parseInt(String.valueOf(stopwatchMain[9]) + String.valueOf(stopwatchMain[10]));
-                    char[] stopwatchMilli = stopwatchTimes[info.position].toString().toCharArray();
+                    char[] stopwatchMilli = stopwatchTimes[info.position].toCharArray();
                     int milli = Integer.parseInt(String.valueOf(stopwatchMilli[13]) + String.valueOf(stopwatchMilli[14]) + String.valueOf(stopwatchMilli[15])) + 1000 * (secs + 60 * (mins + hrs * 60));
                     customMillis = milli;
                     stopwatchIntent.putExtra("customMillis", customMillis);
@@ -209,7 +213,10 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
                 builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //TODO add link to market.
+                        String appName = "market://details?id=com.shockwave.clockproj.paid";
+                        Intent goToMarket;
+                        goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(appName));
+                        startActivity(goToMarket);
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -281,11 +288,14 @@ public class StopwatchFragment extends Fragment implements View.OnClickListener,
         } else if (id == R.id.menu_buy_pro) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Buy Pro Version");
-            builder.setMessage("If you buy the pro version of Clock Project, this button will become a button allowing you to change the limit of saved times on the stopwatch. Buy now?");
+            builder.setMessage("If you buy the pro version of Clock Project, this button will be usable as a way to set the saved times limit of the stopwatch. Buy now?");
             builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    //TODO add link to market.
+                    String appName = "market://details?id=com.shockwave.clockproj.paid";
+                    Intent goToMarket;
+                    goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(appName));
+                    startActivity(goToMarket);
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

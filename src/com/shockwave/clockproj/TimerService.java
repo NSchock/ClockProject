@@ -42,7 +42,7 @@ public class TimerService extends Service {
         Notification.Builder builder = new Notification.Builder(getApplicationContext());
         builder.setContentTitle("Clock Project Timer");
         builder.setContentText("Timer is Running.");
-        builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setSmallIcon(R.drawable.ic_stat_ic_timer_running);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         Notification timerRunningNote = builder.build();
@@ -106,7 +106,7 @@ public class TimerService extends Service {
                 Notification.Builder builder = new Notification.Builder(getApplicationContext());
                 builder.setContentTitle("Clock Project Timer");
                 builder.setContentText("Time is up.");
-                builder.setSmallIcon(R.drawable.ic_launcher);
+                builder.setSmallIcon(R.drawable.ic_stat_timer_up);
                 builder.setDefaults(Notification.DEFAULT_SOUND);
                 builder.setContentIntent(pendingIntent);
                 builder.setAutoCancel(true);

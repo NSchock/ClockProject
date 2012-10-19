@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-//Might be using thread wrong
 public class StopwatchService extends Service {
     final static String START_ACTION = "START_ACTION";
 
@@ -76,7 +75,7 @@ public class StopwatchService extends Service {
         Notification.Builder builder = new Notification.Builder(getApplicationContext());
         builder.setContentTitle("Clock Project Stopwatch");
         builder.setContentText("Stopwatch is Running.");
-        builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setSmallIcon(R.drawable.ic_stat_stopwatch_running);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         Notification notification = builder.build();
