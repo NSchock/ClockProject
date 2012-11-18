@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import com.jakewharton.notificationcompat2.NotificationCompat2;
 
 public class TimerService extends Service {
     final static String START_ACTION = "START_ACTION_TIMER";
@@ -39,12 +40,11 @@ public class TimerService extends Service {
         Intent notificationIntent = new Intent(getApplicationContext(), ClockMain.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
-        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+        NotificationCompat2.Builder builder = new NotificationCompat2.Builder(getApplicationContext());
         builder.setContentTitle("Clock Project Timer");
         builder.setContentText("Timer is Running.");
         builder.setSmallIcon(R.drawable.ic_stat_ic_timer_running);
         builder.setContentIntent(pendingIntent);
-        builder.setAutoCancel(true);
         Notification timerRunningNote = builder.build();
         startForeground(71, timerRunningNote);
 
@@ -103,7 +103,7 @@ public class TimerService extends Service {
 
                 Intent notificationIntent = new Intent(getApplicationContext(), ClockMain.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
-                Notification.Builder builder = new Notification.Builder(getApplicationContext());
+                NotificationCompat2.Builder builder = new NotificationCompat2.Builder(getApplicationContext());
                 builder.setContentTitle("Clock Project Timer");
                 builder.setContentText("Time is up.");
                 builder.setSmallIcon(R.drawable.ic_stat_timer_up);

@@ -1,17 +1,23 @@
 package com.shockwave.clockproj;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.NumberPicker;
 import android.widget.TextView;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import net.simonvt.widget.NumberPicker;
 
 
-public class TimerFragment extends Fragment implements View.OnClickListener, NumberPicker.OnValueChangeListener {
+public class TimerFragment extends SherlockFragment implements View.OnClickListener, NumberPicker.OnValueChangeListener {
     TextView txtTimer, txtTimerMillis;
     Button btnStartTimer, btnStopTimer, btnResetTimer;
     NumberPicker npHour, npMin, npSec;
@@ -49,7 +55,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Num
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_delete_times).setVisible(false);
-        menu.findItem(R.id.menu_set_saved_times_limit).setVisible(false);
         if (isFree()) {
             menu.findItem(R.id.menu_buy_pro).setVisible(true);
         }
@@ -58,7 +63,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Num
             public boolean onMenuItemClick(MenuItem menuItem) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Buy Pro Version");
-                builder.setMessage("If you buy the pro version of Clock Project, this button will become a button allowing you to change the limit of saved times on the stopwatch. Buy now?");
+                builder.setMessage("If you buy the pro version of Clock Project, this button will be removed on the timer portion of the application. Buy now?");
                 builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

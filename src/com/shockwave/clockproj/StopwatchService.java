@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import com.jakewharton.notificationcompat2.NotificationCompat2;
 
 public class StopwatchService extends Service {
     final static String START_ACTION = "START_ACTION";
@@ -72,12 +73,11 @@ public class StopwatchService extends Service {
         Intent notificationIntent = new Intent(getApplicationContext(), ClockMain.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
-        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+        NotificationCompat2.Builder builder = new NotificationCompat2.Builder(getApplicationContext());
         builder.setContentTitle("Clock Project Stopwatch");
         builder.setContentText("Stopwatch is Running.");
         builder.setSmallIcon(R.drawable.ic_stat_stopwatch_running);
         builder.setContentIntent(pendingIntent);
-        builder.setAutoCancel(true);
         Notification notification = builder.build();
         startForeground(51, notification);
 

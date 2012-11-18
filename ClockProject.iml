@@ -16,7 +16,7 @@
         <option name="USE_CUSTOM_COMPILER_MANIFEST" value="false" />
         <option name="CUSTOM_COMPILER_MANIFEST" value="" />
         <option name="APK_PATH" value="" />
-        <option name="LIBRARY_PROJECT" value="true" />
+        <option name="LIBRARY_PROJECT" value="false" />
         <option name="RUN_PROCESS_RESOURCES_MAVEN_TASK" value="true" />
         <option name="GENERATE_UNSIGNED_APK" value="false" />
         <option name="CUSTOM_DEBUG_KEYSTORE_PATH" value="" />
@@ -27,6 +27,7 @@
           <path>/res-overlay</path>
         </resOverlayFolders>
         <includeSystemProguardFile>true</includeSystemProguardFile>
+        <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
         <additionalNativeLibs />
       </configuration>
     </facet>
@@ -39,6 +40,10 @@
     </content>
     <orderEntry type="jdk" jdkName="Android 4.1 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="ActionBarSherlock" exported="" />
+    <orderEntry type="library" name="NotificationCompat2-1.1.2" level="project" />
+    <orderEntry type="module" module-name="NumberPickerSupport" exported="" />
+    <orderEntry type="library" name="nineoldandroids-2.3.0" level="project" />
   </component>
 </module>
 

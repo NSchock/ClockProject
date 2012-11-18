@@ -5,6 +5,8 @@
     <excludeFromCompile>
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/ClockProjectLib/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/../ActionBarSherlock-4.2.0/library/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/../android-numberpicker-master/library/gen" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>

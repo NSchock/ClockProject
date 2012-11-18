@@ -70,19 +70,19 @@
             android:layout_height="wrap_content"
             android:paddingTop="15sp">
 
-        <NumberPicker
+        <net.simonvt.widget.NumberPicker
                 android:id="@+id/npHours"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
 
-        <NumberPicker
+        <net.simonvt.widget.NumberPicker
                 android:id="@+id/npMinutes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
 
-        <NumberPicker
+        <net.simonvt.widget.NumberPicker
                 android:id="@+id/npSeconds"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

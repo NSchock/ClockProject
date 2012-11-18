@@ -5,9 +5,6 @@
           android:title="Delete All Times"
           android:icon="@drawable/ic_action_delete"
           android:showAsAction="always|withText"/>
-    <item android:id="@+id/menu_set_saved_times_limit"
-          android:title="Set Saved Times Limit"
-          android:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_buy_pro"
           android:title="Buy Pro Version"
           android:showAsAction="ifRoom|withText"
