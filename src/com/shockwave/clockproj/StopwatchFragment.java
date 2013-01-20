@@ -127,33 +127,38 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         if (stopwatchRunning)
             showStopButton();
 
-        final SwipeDetector swipeDetector = new SwipeDetector();
+        SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(lvStopwatch,
+                new SwipeDismissListViewTouchListener.OnDismissCallback() {
+                    @Override
+                    public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                        for (int position : reverseSortedPositions) {
+                            stopwatchTimes.remove(position);
+                        }
+                        stopwatchAdapter.notifyDataSetChanged();
+                    }
+                });
 
-        lvStopwatch.setOnTouchListener(swipeDetector);
+        lvStopwatch.setOnTouchListener(touchListener);
+        lvStopwatch.setOnScrollListener(touchListener.makeScrollListener());
         lvStopwatch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if (swipeDetector.swipeDetected()) {
-                    stopwatchTimes.remove(position);
-                    stopwatchAdapter.notifyDataSetChanged();
-                } else {
-                    if (!stopwatchTimes.get(position).equals(" ")) {
-                        valueEntered = true;
-                        char[] stopwatchMain = stopwatchTimes.get(position).toCharArray();
-                        int hrs = Integer.parseInt(String.valueOf(stopwatchMain[0]));
-                        int mins = Integer.parseInt(String.valueOf(stopwatchMain[4]) + String.valueOf
-                                (stopwatchMain[5]));
-                        int secs = Integer.parseInt(String.valueOf(stopwatchMain[9]) + String.valueOf
-                                (stopwatchMain[10]));
-                        char[] stopwatchMilli = stopwatchTimes.get(position).toCharArray();
-                        int milli = Integer.parseInt(String.valueOf(stopwatchMilli[13]) + String.valueOf
-                                (stopwatchMilli[14]) + String.valueOf(stopwatchMilli[15])) + 1000 * (secs + 60 *
-                                (mins + hrs * 60));
-                        customMillis = milli;
-                        stopwatchIntent.putExtra("customMillis", customMillis);
-                        stopwatchIntent.putExtra("valueEntered", valueEntered);
-                        updateStopwatch(milli);
-                    }
+                if (!stopwatchTimes.get(position).equals(" ")) {
+                    valueEntered = true;
+                    char[] stopwatchMain = stopwatchTimes.get(position).toCharArray();
+                    int hrs = Integer.parseInt(String.valueOf(stopwatchMain[0]));
+                    int mins = Integer.parseInt(String.valueOf(stopwatchMain[4]) + String.valueOf
+                            (stopwatchMain[5]));
+                    int secs = Integer.parseInt(String.valueOf(stopwatchMain[9]) + String.valueOf
+                            (stopwatchMain[10]));
+                    char[] stopwatchMilli = stopwatchTimes.get(position).toCharArray();
+                    int milli = Integer.parseInt(String.valueOf(stopwatchMilli[13]) + String.valueOf
+                            (stopwatchMilli[14]) + String.valueOf(stopwatchMilli[15])) + 1000 * (secs + 60 *
+                            (mins + hrs * 60));
+                    customMillis = milli;
+                    stopwatchIntent.putExtra("customMillis", customMillis);
+                    stopwatchIntent.putExtra("valueEntered", valueEntered);
+                    updateStopwatch(milli);
                 }
             }
         });
@@ -161,12 +166,7 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         lvStopwatch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if (swipeDetector.swipeDetected()) {
-                    stopwatchTimes.remove(position);
-                    stopwatchAdapter.notifyDataSetChanged();
-                } else {
-                    lvStopwatch.showContextMenu();
-                }
+                lvStopwatch.showContextMenu();
                 return false;
             }
         });
@@ -240,9 +240,11 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
                     .toString().equals(". 000"))
                 getSherlockActivity().getApplicationContext().startService(swLoopIntent);
         } else if (id == R.id.bStop) {
+            hideStopButton();
             stopwatchRunning = false;
             getSherlockActivity().getApplicationContext().stopService(stopwatchIntent);
-            stopwatchTimes.add(0, txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString() + "     " + txtStopwatchLoopMain.getText().toString() + txtStopwatchLoopMillis.getText().toString());
+            stopwatchTimes.add(0, txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString() + "    " +
+                    " " + txtStopwatchLoopMain.getText().toString() + txtStopwatchLoopMillis.getText().toString());
             getSherlockActivity().getApplicationContext().stopService(swLoopIntent);
         } else if (id == R.id.bReset) {
             //Reset main stopwatch
@@ -269,7 +271,8 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
             prefs.edit().putBoolean("newLoop", true);
             prefs.edit().commit();
             getSherlockActivity().getApplicationContext().startService(swLoopIntent);
-            stopwatchTimes.add(0, txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString() + "        " + txtStopwatchLoopMain.getText().toString() + txtStopwatchLoopMillis.getText().toString());
+            stopwatchTimes.add(0, txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString() + "    " +
+                    "    " + txtStopwatchLoopMain.getText().toString() + txtStopwatchLoopMillis.getText().toString());
         }
         stopwatchAdapter.notifyDataSetChanged();
         lvStopwatch.invalidateViews();
@@ -290,13 +293,11 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {            hideStopButton();
-
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList("stopwatchTimes", stopwatchTimes);
         outState.putBoolean("stopwatchRunning", stopwatchRunning);
     }
-
 
     @Override
     public void onPause() {
