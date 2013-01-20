@@ -7,6 +7,16 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
+/**
+ * Program: Clock Project
+ *
+ * Class: ClockMain
+ * Author: Nolan Schock (Shockwave)
+ * Version: 2.1
+ * Description: Main Activity for Clock Project. Instantiates ActionBar Tabs which make use of Fragments
+ * Last Updated: November 2012
+ * Recent Changes:
+ */
 public class ClockMain extends SherlockFragmentActivity {
 
     @Override
@@ -32,13 +42,28 @@ public class ClockMain extends SherlockFragmentActivity {
         private final String mTag;
         private final Class<T> mClass;
         private Fragment mFragment;
+        private final Bundle mArgs;
 
         public TabListener(SherlockFragmentActivity activity, String tag, Class<T> clz) {
+            this(activity, tag, clz, null);
+        }
+
+        public TabListener(SherlockFragmentActivity activity, String tag, Class<T> clz, Bundle args) {
             mActivity = activity;
             mTag = tag;
             mClass = clz;
-        }
+            mArgs = args;
 
+            // Check to see if we already have a fragment for this tab, probably
+            // from a previously saved state.  If so, deactivate it, because our
+            // initial state is that a tab isn't shown.
+            mFragment = mActivity.getSupportFragmentManager().findFragmentByTag(mTag);
+            if (mFragment != null && !mFragment.isDetached()) {
+                FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+                ft.detach(mFragment);
+                ft.commit();
+            }
+        }
 
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             if (mFragment == null) {

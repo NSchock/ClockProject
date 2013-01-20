@@ -31,12 +31,41 @@
                 android:layout_below="@+id/tvStopwatch"
                 android:text=". 000"
                 android:textSize="25sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/stopwatch_lap_relative"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp">
+
+        <TextView
+                android:id="@+id/tvLapMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="0 : 00 : 00"
+                android:textSize="20sp"/>
+
+        <TextView
+                android:id="@+id/tvLapMillis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tvLapMain"
+                android:text=" . 000"
+                android:textSize="20sp"/>
     </RelativeLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="15sp">
+            android:paddingTop="15sp"
+            android:clickable="false"
+            >
 
         <Button
                 android:id="@+id/bStart"
@@ -73,10 +102,18 @@
                 android:visibility="gone"/>
     </LinearLayout>
 
-    <ListView
-            android:id="@+id/list_stopwatch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-    </ListView>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+        <ListView
+                android:id="@+id/list_stopwatch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5">
+        </ListView>
+
+    </LinearLayout>
 
 </LinearLayout>

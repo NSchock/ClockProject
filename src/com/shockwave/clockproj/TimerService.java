@@ -113,6 +113,8 @@ public class TimerService extends Service {
                 Notification notification = builder.build();
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(0, notification);
+
+
             }
         }.start();
 

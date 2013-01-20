@@ -45,6 +45,7 @@
                 android:layout_height="match_parent"
                 android:paddingTop="15sp"
                 android:orientation="vertical">
+
             <Button
                     android:id="@+id/bStart"
                     android:layout_width="fill_parent"

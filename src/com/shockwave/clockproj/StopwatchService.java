@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import com.jakewharton.notificationcompat2.NotificationCompat2;
 
@@ -22,7 +23,7 @@ public class StopwatchService extends Service {
     private Runnable startStopwatch = new Runnable() {
         public void run() {
             final long start = sStart;
-            elapsedTime = System.currentTimeMillis() - start;
+            elapsedTime = SystemClock.elapsedRealtime() - start;
             updateStopwatch(elapsedTime);
             sHandler.postDelayed(this, REFRESH_RATE);
         }
@@ -70,6 +71,7 @@ public class StopwatchService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //set up notification to start foreground service
         Intent notificationIntent = new Intent(getApplicationContext(), ClockMain.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
@@ -86,12 +88,12 @@ public class StopwatchService extends Service {
         Log.d("Values", String.valueOf(valueEntered) + "," + String.valueOf("customMillis"));
         if (!valueEntered) {
             if (sStart == 0L) {
-                sStart = System.currentTimeMillis();
+                sStart = SystemClock.elapsedRealtime();
             } else {
-                sStart = System.currentTimeMillis() - elapsedTime;
+                sStart = SystemClock.elapsedRealtime() - elapsedTime;
             }
         } else {
-            sStart = System.currentTimeMillis() - customMillis;
+            sStart = SystemClock.elapsedRealtime() - customMillis;
         }
         sHandler.removeCallbacks(startStopwatch);
         sHandler.postDelayed(startStopwatch, REFRESH_RATE);

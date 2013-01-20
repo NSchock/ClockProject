@@ -1,26 +1,31 @@
 package com.shockwave.clockproj;
 
-import android.app.AlertDialog;
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import net.simonvt.widget.NumberPicker;
 
 
-public class TimerFragment extends SherlockFragment implements View.OnClickListener, NumberPicker.OnValueChangeListener {
+public class TimerFragment extends SherlockFragment implements View.OnClickListener,
+        NumberPicker.OnValueChangeListener {
     TextView txtTimer, txtTimerMillis;
     Button btnStartTimer, btnStopTimer, btnResetTimer;
     NumberPicker npHour, npMin, npSec;
+
+/*    GridView gvInput;
+    static final String[] numbers = new String[]{
+            "1", "2", "3",
+            "4", "5", "6",
+            "7", "8", "9",
+            "0"};*/
+
     boolean timerRunning = false;
 
     private TimerReceiver receiver;
@@ -42,50 +47,15 @@ public class TimerFragment extends SherlockFragment implements View.OnClickListe
         super.onCreate(savedInstanceState);
     }
 
-    public boolean isFree() {
-        return getActivity().getPackageName().toLowerCase().contains("free");
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_stopwatch, menu);
+        inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_delete_times).setVisible(false);
-        if (isFree()) {
-            menu.findItem(R.id.menu_buy_pro).setVisible(true);
-        }
-        menu.findItem(R.id.menu_buy_pro).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Buy Pro Version");
-                builder.setMessage("If you buy the pro version of Clock Project, this button will be removed on the timer portion of the application. Buy now?");
-                builder.setPositiveButton("Buy Pro", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String appName = "market://details?id=com.shockwave.clockproj.paid";
-                        Intent goToMarket;
-                        goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(appName));
-                        startActivity(goToMarket);
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        return;
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-
-                alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                alertDialog.show();
-                return true;
-            }
-        });
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -108,6 +78,17 @@ public class TimerFragment extends SherlockFragment implements View.OnClickListe
         npHour.setOnValueChangedListener(this);
         npMin.setOnValueChangedListener(this);
         npSec.setOnValueChangedListener(this);
+
+/*        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getSherlockActivity().getApplicationContext(),
+                android.R.layout.simple_list_item_1, numbers);
+        gvInput = (GridView) view.findViewById(R.id.gvTimerInput);
+        gvInput.setAdapter(adapter);
+        gvInput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //TODO send input to timer.
+            }
+        });*/
 
         btnStartTimer = (Button) view.findViewById(R.id.bStartTimer);
         btnResetTimer = (Button) view.findViewById(R.id.bResetTimer);
