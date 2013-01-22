@@ -28,34 +28,20 @@ public class StopwatchLoopService extends Service {
     private long loopStart, elapsedLoopTime;
     private boolean valueEntered = false, newLoop = true;
 
-    private final int REFRESH_RATE = 100;
+    private final int REFRESH_RATE = 1;
     private Handler sHandler = new Handler();
     private Runnable startLoopStopwatch = new Runnable() {
         public void run() {
             final long start = loopStart;
             elapsedLoopTime = SystemClock.elapsedRealtime() - start;
-            updateStopwatch(elapsedLoopTime);
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(StopwatchLoopService.LOOP_START_ACTION);
+            broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            broadcastIntent.putExtra("elapsedLoopTime", elapsedLoopTime);
+            sendBroadcast(broadcastIntent);
             sHandler.postDelayed(this, REFRESH_RATE);
         }
     };
-
-    public void updateStopwatch(long time) {
-        int seconds = (int) time / 1000;
-        int minutes = seconds / 60;
-        int hours = minutes / 60;
-        long millis = time % 1000;
-        seconds = seconds % 60;
-        minutes = minutes % 60;
-        hours = hours % 24;
-
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(StopwatchLoopService.LOOP_START_ACTION);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra("stopwatchLoopMain", String.format("%d : %02d : %02d", hours, minutes,
-                seconds));
-        broadcastIntent.putExtra("stopwatchLoopMillis", String.format(". %03d", millis));
-        sendBroadcast(broadcastIntent);
-    }
 
     SharedPreferences preferences;
     private boolean startedLoopBefore = false;
@@ -64,13 +50,6 @@ public class StopwatchLoopService extends Service {
     public void onCreate() {
         preferences = getSharedPreferences("StopwatchLoopServicePrefs", 0);
         preferences.getBoolean("stopwatchloopsaves", true);
- /*       startedLoopBefore = preferences.getBoolean("startedLoopBefore", false);
-        if (startedLoopBefore) {
-            loopStart = preferences.getLong("loopStart", 0);
-            elapsedLoopTime = preferences.getLong("elapsedLoopTime", 0);
-        } else {
-            loopStart = 0;
-        }*/
         newLoop = preferences.getBoolean("newLoop", true);
         if (newLoop) {
             loopStart = 0;

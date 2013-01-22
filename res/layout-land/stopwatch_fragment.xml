@@ -17,7 +17,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10sp"
                 android:paddingRight="10sp"
-                android:paddingTop="15sp">
+                android:paddingTop="10sp">
 
             <TextView
                     android:id="@+id/tvStopwatch"
@@ -40,10 +40,36 @@
                     android:textSize="25sp"/>
         </RelativeLayout>
 
+        <RelativeLayout
+                android:id="@+id/stopwatch_lap_relative"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp">
+
+            <TextView
+                    android:id="@+id/tvLapMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:text="0 : 00 : 00"
+                    android:textSize="20sp"/>
+
+            <TextView
+                    android:id="@+id/tvLapMillis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tvLapMain"
+                    android:text=" . 000"
+                    android:textSize="20sp"/>
+        </RelativeLayout>
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="15sp"
+                android:paddingTop="10sp"
                 android:orientation="vertical">
 
             <Button

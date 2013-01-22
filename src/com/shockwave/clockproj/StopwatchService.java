@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 import com.jakewharton.notificationcompat2.NotificationCompat2;
 
 public class StopwatchService extends Service {
@@ -18,34 +17,20 @@ public class StopwatchService extends Service {
     long customMillis, sStart, elapsedTime;
     boolean valueEntered = false;
 
-    private final int REFRESH_RATE = 100;
+    private final int REFRESH_RATE = 1;
     private Handler sHandler = new Handler();
     private Runnable startStopwatch = new Runnable() {
         public void run() {
             final long start = sStart;
             elapsedTime = SystemClock.elapsedRealtime() - start;
-            updateStopwatch(elapsedTime);
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(StopwatchService.START_ACTION);
+            broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            broadcastIntent.putExtra("elapsedTime", elapsedTime);
+            sendBroadcast(broadcastIntent);
             sHandler.postDelayed(this, REFRESH_RATE);
         }
     };
-
-    public void updateStopwatch(long time) {
-        int seconds = (int) time / 1000;
-        int minutes = seconds / 60;
-        int hours = minutes / 60;
-        long millis = time % 1000;
-        seconds = seconds % 60;
-        minutes = minutes % 60;
-        hours = hours % 24;
-
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(StopwatchService.START_ACTION);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra("stopwatchMain", String.format("%d : %02d : %02d", hours, minutes,
-                seconds));
-        broadcastIntent.putExtra("stopwatchMillis", String.format(". %03d", millis));
-        sendBroadcast(broadcastIntent);
-    }
 
     SharedPreferences preferences;
     boolean startedBefore = false;
@@ -85,7 +70,6 @@ public class StopwatchService extends Service {
 
         valueEntered = intent.getBooleanExtra("valueEntered", false);
         customMillis = intent.getLongExtra("customMillis", 0);
-        Log.d("Values", String.valueOf(valueEntered) + "," + String.valueOf("customMillis"));
         if (!valueEntered) {
             if (sStart == 0L) {
                 sStart = SystemClock.elapsedRealtime();

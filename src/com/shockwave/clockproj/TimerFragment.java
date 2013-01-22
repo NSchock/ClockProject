@@ -19,13 +19,6 @@ public class TimerFragment extends SherlockFragment implements View.OnClickListe
     Button btnStartTimer, btnStopTimer, btnResetTimer;
     NumberPicker npHour, npMin, npSec;
 
-/*    GridView gvInput;
-    static final String[] numbers = new String[]{
-            "1", "2", "3",
-            "4", "5", "6",
-            "7", "8", "9",
-            "0"};*/
-
     boolean timerRunning = false;
 
     private TimerReceiver receiver;
@@ -78,17 +71,6 @@ public class TimerFragment extends SherlockFragment implements View.OnClickListe
         npHour.setOnValueChangedListener(this);
         npMin.setOnValueChangedListener(this);
         npSec.setOnValueChangedListener(this);
-
-/*        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getSherlockActivity().getApplicationContext(),
-                android.R.layout.simple_list_item_1, numbers);
-        gvInput = (GridView) view.findViewById(R.id.gvTimerInput);
-        gvInput.setAdapter(adapter);
-        gvInput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //TODO send input to timer.
-            }
-        });*/
 
         btnStartTimer = (Button) view.findViewById(R.id.bStartTimer);
         btnResetTimer = (Button) view.findViewById(R.id.bResetTimer);
