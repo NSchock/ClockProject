@@ -2,6 +2,7 @@ package com.shockwave.clockproj;
 
 import android.content.*;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,8 @@ import java.util.HashMap;
 
 //possibly need to modify save loop procedure to account for difference in times when using custom time
 //should be able to be accomplished by just not calling findLoopValue when boolean is true for custom time use
-//Looping/Stopping not entirely accurate, try to force same values at least when stopping.
+//ERROR IN ONDESTROY FOR SERVICES, SAVES WRONG ELAPSEDTIME VALUE
+//CREATE LOOPRUNNING BOOLEAN AND DO SAME PROCEDURE AS IN MAIN BROADCAST RECEIVER
 public class StopwatchFragment extends SherlockFragment implements View.OnClickListener {
     Intent stopwatchIntent, swLoopIntent;
 
@@ -27,7 +29,10 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
     //Listview Vars
     ListView lvStopwatch;
     ArrayList<HashMap<String, String>> stopwatchTimes = new ArrayList<HashMap<String, String>>();
+    private static ArrayList<HashMap<String, String>> saveTimes;
+
     ArrayList<Long> longRawTimes = new ArrayList<Long>();
+    private static ArrayList<Long> staticRawTimes = new ArrayList<Long>();
 
     long customMillis;
     boolean valueEntered = false;
@@ -37,7 +42,7 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
 
     private SharedPreferences prefs;
     private SimpleAdapter simpleAdapter;
-    private static ArrayList<HashMap<String, String>> saveTimes;
+
 
     private void updateStopwatch(long time) {
         int seconds = (int) time / 1000;
@@ -88,6 +93,9 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         }
         if (saveTimes != null) {
             stopwatchTimes = saveTimes;
+        }
+        if (staticRawTimes != null) {
+            longRawTimes = staticRawTimes;
         }
     }
 
@@ -251,8 +259,6 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         stopwatchRunning = true;
         getSherlockActivity().getApplicationContext().startService(stopwatchIntent);
         stopwatchIntent.removeExtra("valueEntered");
-//        if (!txtStopwatchLoopMain.getText().toString().equals("0 : 00 : 00") || !txtStopwatchLoopMillis.getText()
-// .toString().equals(". 000"))
         getSherlockActivity().getApplicationContext().startService(swLoopIntent);
     }
 
@@ -262,15 +268,16 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         getSherlockActivity().getApplicationContext().stopService(stopwatchIntent);
         item.put("line1", txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString());
         getSherlockActivity().getApplicationContext().stopService(swLoopIntent);
-        findLoopValue();
-        longRawTimes.add(0, elapsedTime);
+        updateLoop(findLoopValue());
         item.put("line2", txtStopwatchLoopMain.getText().toString() + txtStopwatchLoopMillis.getText().toString());
+        longRawTimes.add(0, elapsedTime);
         stopwatchTimes.add(0, item);
+        Log.d("ELAPSEDTIME", String.valueOf(elapsedTime));
     }
 
     private void loopAction(HashMap<String, String> item) {
         item.put("line1", txtStopwatch.getText().toString() + txtStopwatchMillis.getText().toString());
-        findLoopValue();
+        updateLoop(findLoopValue());
         longRawTimes.add(0, elapsedTime);
         item.put("line2", txtStopwatchLoopMain.getText().toString() + txtStopwatchLoopMillis.getText().toString());
         stopwatchTimes.add(0, item);
@@ -302,15 +309,12 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         editor.commit();
     }
 
-    private void findLoopValue() {
-        //subtract values, convert to string, set as line2 and textview loop value
-        long loopMilli;
-        if (!longRawTimes.isEmpty()) {
-            loopMilli = elapsedTime - longRawTimes.get(0);
-        } else {
-            return;
-        }
-        updateLoop(loopMilli);
+    private long findLoopValue() {
+        if (!longRawTimes.isEmpty())
+            return elapsedTime - longRawTimes.get(0);
+        else
+            return elapsedTime;
+
     }
 
     private void showStopButton() {
@@ -332,6 +336,7 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         super.onSaveInstanceState(outState);
         outState.putBoolean("stopwatchRunning", stopwatchRunning);
         saveTimes = stopwatchTimes;
+        staticRawTimes = longRawTimes;
     }
 
     @Override
@@ -347,6 +352,7 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
         editor.putString("stopwatchLoopMain", txtStopwatchLoopMain.getText().toString());
         editor.putString("stopwatchLoopMillis", txtStopwatchLoopMillis.getText().toString());
         saveTimes = stopwatchTimes;
+        staticRawTimes = longRawTimes;
         editor.commit();
     }
 
@@ -354,8 +360,11 @@ public class StopwatchFragment extends SherlockFragment implements View.OnClickL
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            elapsedTime = intent.getLongExtra("elapsedTime", 0);
-            updateStopwatch(elapsedTime);
+            if (stopwatchRunning) {
+                elapsedTime = intent.getLongExtra("elapsedTime", 0);
+                updateStopwatch(elapsedTime);
+            }
+
         }
 
     }

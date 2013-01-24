@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.util.Log;
 import com.jakewharton.notificationcompat2.NotificationCompat2;
 
 public class StopwatchService extends Service {
@@ -17,15 +18,14 @@ public class StopwatchService extends Service {
     long customMillis, sStart, elapsedTime;
     boolean valueEntered = false;
 
+    Intent broadcastIntent;
+
     private final int REFRESH_RATE = 1;
     private Handler sHandler = new Handler();
     private Runnable startStopwatch = new Runnable() {
         public void run() {
             final long start = sStart;
             elapsedTime = SystemClock.elapsedRealtime() - start;
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(StopwatchService.START_ACTION);
-            broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
             broadcastIntent.putExtra("elapsedTime", elapsedTime);
             sendBroadcast(broadcastIntent);
             sHandler.postDelayed(this, REFRESH_RATE);
@@ -37,6 +37,9 @@ public class StopwatchService extends Service {
 
     @Override
     public void onCreate() {
+        broadcastIntent = new Intent();
+        broadcastIntent.setAction(StopwatchService.START_ACTION);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         preferences = getSharedPreferences("StopwatchServicePrefs", 0);
         preferences.getBoolean("stopwatchsaves", true);
         startedBefore = preferences.getBoolean("startedBefore", false);
@@ -89,14 +92,15 @@ public class StopwatchService extends Service {
     @Override
     public void onDestroy() {
         startedBefore = true;
+        stopForeground(true);
         sHandler.removeCallbacks(startStopwatch);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong("sStart", sStart);
         editor.putLong("elapsedTime", elapsedTime);
+        editor.putLong("sStart", sStart);
         editor.putBoolean("startedBefore", startedBefore);
         editor.commit();
+        Log.d("ELAPSED", String.valueOf(elapsedTime));
 
-        stopForeground(true);
         super.onDestroy();
     }
 }

@@ -103,15 +103,14 @@ public class StopwatchLoopService extends Service {
 
     @Override
     public void onDestroy() {
-        startedLoopBefore = true;
+        stopForeground(true);
         sHandler.removeCallbacks(startLoopStopwatch);
+        startedLoopBefore = true;
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong("loopStart", loopStart);
         editor.putLong("elapsedLoopTime", elapsedLoopTime);
         editor.putBoolean("startedLoopBefore", startedLoopBefore);
         editor.commit();
-
-        stopForeground(true);
         super.onDestroy();
     }
 }

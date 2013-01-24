@@ -9,12 +9,12 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * Program: Clock Project
- *
+ * <p/>
  * Class: ClockMain
  * Author: Nolan Schock (Shockwave)
- * Version: 2.1
+ * Version: 2.2
  * Description: Main Activity for Clock Project. Instantiates ActionBar Tabs which make use of Fragments
- * Last Updated: November 2012
+ * Last Updated: January 2013
  * Recent Changes:
  */
 public class ClockMain extends SherlockFragmentActivity {
@@ -27,9 +27,11 @@ public class ClockMain extends SherlockFragmentActivity {
         actionBar.setTitle("Clock Project");
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        ActionBar.Tab stopwatchTab = actionBar.newTab().setText("Stopwatch").setTabListener(new TabListener<StopwatchFragment>(this, "Stopwatch", StopwatchFragment.class));
+        ActionBar.Tab stopwatchTab = actionBar.newTab().setText("Stopwatch").setTabListener(new
+                TabListener<StopwatchFragment>(this, "Stopwatch", StopwatchFragment.class));
         actionBar.addTab(stopwatchTab);
-        ActionBar.Tab timerTab = actionBar.newTab().setText("Timer").setTabListener(new TabListener<TimerFragment>(this, "Timer", TimerFragment.class));
+        ActionBar.Tab timerTab = actionBar.newTab().setText("Timer").setTabListener(new TabListener<TimerFragment>
+                (this, "Timer", TimerFragment.class));
         actionBar.addTab(timerTab);
 
         if (savedInstanceState != null) {
