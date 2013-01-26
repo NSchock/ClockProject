@@ -1,4 +1,4 @@
-package com.shockwave.clockproj;
+package com.shockwave.clockproj.free;
 
 import android.view.View;
 import android.view.ViewGroup;

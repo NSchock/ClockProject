@@ -10,13 +10,13 @@
             android:layout_width="match_parent">
 
         <fragment
-                android:name="com.shockwave.clockproj.StopwatchFragment"
+                android:name="com.shockwave.clockproj.free.StopwatchFragment"
                 android:id="@+id/stopwatch_frag"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>
 
         <fragment
-                android:name="com.shockwave.clockproj.TimerFragment"
+                android:name="com.shockwave.clockproj.free.TimerFragment"
                 android:id="@+id/timer_frag"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>

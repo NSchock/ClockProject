@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.shockwave.clockproj;
+package com.shockwave.clockproj.free;
 
 import android.graphics.Rect;
 import android.view.*;
@@ -39,16 +39,16 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * dismissable. {@link android.widget.ListView} is given special treatment because by default it handles touches
  * for its list items... i.e. it's in charge of drawing the pressed state (the list selector),
  * handling list item clicks, etc.
- *
+ * <p/>
  * <p>After creating the listener, the caller should also call
  * {@link android.widget.ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}, passing
  * in the scroll listener returned by {@link #makeScrollListener()}. If a scroll listener is
  * already assigned, the caller should still pass scroll changes through to this listener. This will
- * ensure that this {@link com.shockwave.clockproj.SwipeDismissListViewTouchListener} is paused during list view
+ * ensure that this {@link com.shockwave.clockproj.free.SwipeDismissListViewTouchListener} is paused during list view
  * scrolling.</p>
- *
+ * <p/>
  * <p>Example usage:</p>
- *
+ * <p/>
  * <pre>
  * SwipeDismissListViewTouchListener touchListener =
  *         new SwipeDismissListViewTouchListener(
@@ -64,10 +64,9 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * listView.setOnTouchListener(touchListener);
  * listView.setOnScrollListener(touchListener.makeScrollListener());
  * </pre>
- *
+ * <p/>
  * <p>This class Requires API level 12 or later due to use of {@link
  * android.view.ViewPropertyAnimator}.</p>
- *
  */
 public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
@@ -92,7 +91,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     private boolean mPaused;
 
     /**
-     * The callback interface used by {@link com.shockwave.clockproj.SwipeDismissListViewTouchListener} to inform its client
+     * The callback interface used by {@link com.shockwave.clockproj.free.SwipeDismissListViewTouchListener} to
+     * inform its client
      * about a successful dismissal of one or more list item positions.
      */
     public interface OnDismissCallback {
@@ -140,9 +140,9 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
      * {@link android.widget.ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}.
      * If a scroll listener is already assigned, the caller should still pass scroll changes
      * through to this listener. This will ensure that this
-     * {@link com.shockwave.clockproj.SwipeDismissListViewTouchListener} is paused during list view scrolling.</p>
+     * {@link com.shockwave.clockproj.free.SwipeDismissListViewTouchListener} is paused during list view scrolling.</p>
      *
-     * @see {@link com.shockwave.clockproj.SwipeDismissListViewTouchListener}
+     * @see {@link com.shockwave.clockproj.free.SwipeDismissListViewTouchListener}
      */
     public AbsListView.OnScrollListener makeScrollListener() {
         return new AbsListView.OnScrollListener() {

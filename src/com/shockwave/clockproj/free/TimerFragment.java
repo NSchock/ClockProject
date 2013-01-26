@@ -1,4 +1,4 @@
-package com.shockwave.clockproj;
+package com.shockwave.clockproj.free;
 
 import android.content.*;
 import android.os.Bundle;

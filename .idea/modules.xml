@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../ActionBarSherlock-4.2.0/library/ActionBarSherlock.iml" filepath="$PROJECT_DIR$/../ActionBarSherlock-4.2.0/library/ActionBarSherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/ClockProject.iml" filepath="$PROJECT_DIR$/ClockProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Millisecond-Chronometer/Millisecond-Chronometer.iml" filepath="$PROJECT_DIR$/Millisecond-Chronometer/Millisecond-Chronometer.iml" />
       <module fileurl="file://$PROJECT_DIR$/../android-numberpicker-master/library/NumberPickerSupport.iml" filepath="$PROJECT_DIR$/../android-numberpicker-master/library/NumberPickerSupport.iml" />
     </modules>
   </component>

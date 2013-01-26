@@ -41,7 +41,6 @@
     <orderEntry type="module" module-name="ActionBarSherlock" exported="" />
     <orderEntry type="library" name="NotificationCompat2-1.1.2" level="project" />
     <orderEntry type="module" module-name="NumberPickerSupport" exported="" />
-    <orderEntry type="module" module-name="Millisecond-Chronometer" />
   </component>
 </module>
 

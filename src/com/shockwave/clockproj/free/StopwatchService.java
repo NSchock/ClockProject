@@ -1,4 +1,4 @@
-package com.shockwave.clockproj;
+package com.shockwave.clockproj.free;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 import com.jakewharton.notificationcompat2.NotificationCompat2;
 
 public class StopwatchService extends Service {
@@ -99,7 +98,6 @@ public class StopwatchService extends Service {
         editor.putLong("sStart", sStart);
         editor.putBoolean("startedBefore", startedBefore);
         editor.commit();
-        Log.d("ELAPSED", String.valueOf(elapsedTime));
 
         super.onDestroy();
     }

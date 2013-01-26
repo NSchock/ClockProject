@@ -1,4 +1,4 @@
-package com.shockwave.clockproj;
+package com.shockwave.clockproj.free;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -26,7 +26,7 @@ public class StopwatchLoopService extends Service {
 
     //Stopwatch Vars
     private long loopStart, elapsedLoopTime;
-    private boolean valueEntered = false, newLoop = true;
+    private boolean newLoop = true;
 
     private final int REFRESH_RATE = 1;
     private Handler sHandler = new Handler();
@@ -96,7 +96,6 @@ public class StopwatchLoopService extends Service {
         }
         sHandler.removeCallbacks(startLoopStopwatch);
         sHandler.postDelayed(startLoopStopwatch, REFRESH_RATE);
-        valueEntered = false;
         intent.removeExtra("valueEntered");
         return START_STICKY;
     }

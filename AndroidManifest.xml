@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.shockwave.clockproj"
+          package="com.shockwave.clockproj.free"
           android:versionCode="4"
           android:versionName="2.1">
 
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-sdk
             android:targetSdkVersion="16"
             android:minSdkVersion="7"/>
@@ -26,27 +27,27 @@
                 android:name=".StopwatchService"
                 android:id="@+id/STOPWATCH_SERVICE">
         </service>
-        <receiver android:name="com.shockwave.clockproj.StopwatchFragment$StopwatchReceiver">
+        <receiver android:name="com.shockwave.clockproj.free.StopwatchFragment$StopwatchReceiver">
             <intent-filter>
-                <action android:name="com.shockwave.clockproj.StopwatchService.START_ACTION"/>
+                <action android:name="com.shockwave.clockproj.free.StopwatchService.START_ACTION"/>
             </intent-filter>
         </receiver>
         <service
                 android:name=".StopwatchLoopService"
                 android:id="@+id/STOPWATCH_LOOP_SERVICE">
         </service>
-        <receiver android:name="com.shockwave.clockproj.StopwatchFragment$StopwatchLoopReceiver">
+        <receiver android:name="com.shockwave.clockproj.free.StopwatchFragment$StopwatchLoopReceiver">
             <intent-filter>
-                <action android:name="com.shockwave.clockproj.StopwatchLoopService.LOOP_START_ACTION"/>
+                <action android:name="com.shockwave.clockproj.free.StopwatchLoopService.LOOP_START_ACTION"/>
             </intent-filter>
         </receiver>
         <service
                 android:name=".TimerService"
                 android:id="@+id/TIMER_SERVICE">
         </service>
-        <receiver android:name="com.shockwave.clockproj.TimerFragment$TimerReceiver">
+        <receiver android:name="com.shockwave.clockproj.free.TimerFragment$TimerReceiver">
             <intent-filter>
-                <action android:name="com.shockwave.clockproj.TimerService.START_ACTION"/>
+                <action android:name="com.shockwave.clockproj.free.TimerService.START_ACTION"/>
             </intent-filter>
         </receiver>
     </application>
